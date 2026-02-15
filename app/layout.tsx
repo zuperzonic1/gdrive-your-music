@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Gdrive Your Music",
   description: "Upload your music to Google Drive and listen to it anywhere.",
+  verification: {
+    google: "your-google-verification-code-here",
+  },
+  other: {
+    "google-site-verification": "ZyddP3wDRIak7nFyL0MHsTflRZ0AQN6RjOZl_fczbic",
+  },
 };
 
 export default function RootLayout({

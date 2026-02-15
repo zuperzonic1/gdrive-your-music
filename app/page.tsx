@@ -361,10 +361,28 @@ function HomeContent() {
             <p className="text-gray-400 mb-6">Authenticate to upload your music files</p>
             <button
               onClick={handleConnect}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-500 font-semibold transition-colors"
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-500 font-semibold transition-colors mb-6"
             >
               Connect to Google Drive
             </button>
+            <div className="text-center text-sm text-gray-500">
+              <p className="mb-2">By connecting, you agree to our:</p>
+              <div className="flex justify-center items-center gap-4">
+                <Link 
+                  href="/terms" 
+                  className="text-blue-400 hover:text-blue-300 transition-colors underline"
+                >
+                  Terms of Service
+                </Link>
+                <span>•</span>
+                <Link 
+                  href="/privacy" 
+                  className="text-blue-400 hover:text-blue-300 transition-colors underline"
+                >
+                  Privacy Policy
+                </Link>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
