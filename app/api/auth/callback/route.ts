@@ -7,17 +7,20 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
     const error = searchParams.get('error');
+    
+    // Get the base URL from environment variable
+    const baseUrl = process.env.NEXTAUTH_URL || request.url;
 
     // Handle OAuth errors
     if (error) {
       return NextResponse.redirect(
-        new URL(`/?error=${encodeURIComponent(error)}`, request.url)
+        new URL(`/?error=${encodeURIComponent(error)}`, baseUrl)
       );
     }
 
     if (!code) {
       return NextResponse.redirect(
-        new URL('/?error=No authorization code provided', request.url)
+        new URL('/?error=No authorization code provided', baseUrl)
       );
     }
 
@@ -27,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     if (!clientId || !clientSecret) {
       return NextResponse.redirect(
-        new URL('/?error=Missing OAuth credentials', request.url)
+        new URL('/?error=Missing OAuth credentials', baseUrl)
       );
     }
 
@@ -44,11 +47,14 @@ export async function GET(request: NextRequest) {
     await saveTokens(tokens);
 
     // Redirect to home page with success message
-    return NextResponse.redirect(new URL('/?auth=success', request.url));
-  } catch (error: any) {
+    return NextResponse.redirect(new URL('/?auth=success', baseUrl));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
+    const baseUrl = process.env.NEXTAUTH_URL || request.url;
+    
     console.error('Error in OAuth callback:', error);
     return NextResponse.redirect(
-      new URL(`/?error=${encodeURIComponent(error.message || 'Authentication failed')}`, request.url)
+      new URL(`/?error=${encodeURIComponent(errorMessage)}`, baseUrl)
     );
   }
 }
