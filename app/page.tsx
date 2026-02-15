@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 interface UploadedFile {
   fileName: string;
   webViewLink: string;
+  webContentLink?: string;
   status: 'pending' | 'uploading' | 'success' | 'error';
   error?: string;
 }
@@ -205,7 +206,12 @@ function HomeContent() {
 
         if (res.ok && data.success) {
           setUploadedFiles(prev => prev.map((item, idx) => 
-            idx === i ? { ...item, status: 'success', webViewLink: data.webViewLink } : item
+            idx === i ? { 
+              ...item, 
+              status: 'success', 
+              webViewLink: data.webViewLink,
+              webContentLink: data.webContentLink
+            } : item
           ));
         } else {
           throw new Error(data.error || 'Upload failed');
@@ -380,7 +386,7 @@ function HomeContent() {
                       type="file"
                       id="playlistFolder"
                       multiple
-                      // @ts-ignore
+                      // @ts-expect-error - webkitdirectory is not in standard TypeScript types
                       webkitdirectory=""
                       onChange={(e) => handleFileSelect(e, true)}
                       disabled={isUploading}
@@ -617,7 +623,7 @@ function HomeContent() {
                       </div>
                       {file.status === 'success' && file.webViewLink && (
                         <button
-                          onClick={() => copyLink(file.webViewLink)}
+                          onClick={() => copyLink(file.webContentLink || file.webViewLink)}
                           className="ml-4 text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition-colors"
                         >
                           Copy Link
