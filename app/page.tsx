@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface UploadedFile {
   fileName: string;
@@ -636,6 +637,39 @@ function HomeContent() {
             )}
           </div>
         )}
+
+        {/* Footer with legal links */}
+        <footer className="mt-12 pt-8 border-t border-gray-700">
+          <div className="text-center text-sm text-gray-400">
+            <div className="flex justify-center items-center gap-6 mb-4">
+              <Link 
+                href="/terms" 
+                className="hover:text-blue-400 transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <span>•</span>
+              <Link 
+                href="/privacy" 
+                className="hover:text-blue-400 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <span>•</span>
+              <a 
+                href="https://github.com/zuperzonic1/gdrive-your-music" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-blue-400 transition-colors"
+              >
+                GitHub
+              </a>
+            </div>
+            <p>
+              © 2026 GDrive Your Music. Your music, your Google Drive, your control.
+            </p>
+          </div>
+        </footer>
       </div>
     </main>
   );
