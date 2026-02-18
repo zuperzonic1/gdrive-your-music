@@ -43,8 +43,8 @@ export async function GET(request: NextRequest) {
     // Exchange code for tokens
     const tokens = await driveService.getTokensFromCode(code);
 
-    // Save tokens to cookies
-    await saveTokens(tokens);
+    // Save tokens to cookies (cast to TokenData interface)
+    await saveTokens(tokens as any);
 
     // Redirect to home page with success message
     return NextResponse.redirect(new URL('/?auth=success', baseUrl));

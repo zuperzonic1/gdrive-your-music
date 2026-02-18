@@ -1,5 +1,7 @@
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
+import { drive_v3 } from 'googleapis';
+import { Readable } from 'stream';
 
 export interface GoogleDriveConfig {
   clientId: string;
@@ -16,9 +18,19 @@ export interface UploadResult {
   error?: string;
 }
 
+export interface DriveStructure {
+  files: Array<{ id: string; name: string; webViewLink: string; webContentLink: string }>;
+  subfolders: Array<{
+    id: string;
+    name: string;
+    files: Array<{ id: string; name: string; webViewLink: string; webContentLink: string }>;
+    subfolders: any[];
+  }>;
+}
+
 export class GoogleDriveService {
   private oauth2Client: OAuth2Client;
-  private drive: any;
+  private drive: drive_v3.Drive | null = null;
 
   constructor(config: GoogleDriveConfig) {
     this.oauth2Client = new google.auth.OAuth2(
@@ -33,8 +45,7 @@ export class GoogleDriveService {
    */
   getAuthUrl(): string {
     const scopes = [
-      'https://www.googleapis.com/auth/drive.file',
-      'https://www.googleapis.com/auth/drive.metadata.readonly'
+      'https://www.googleapis.com/auth/drive.file'
     ];
 
     return this.oauth2Client.generateAuthUrl({
@@ -47,15 +58,15 @@ export class GoogleDriveService {
   /**
    * Exchange authorization code for tokens
    */
-  async getTokensFromCode(code: string): Promise<any> {
+  async getTokensFromCode(code: string): Promise<Record<string, unknown>> {
     const { tokens } = await this.oauth2Client.getToken(code);
-    return tokens;
+    return tokens as Record<string, unknown>;
   }
 
   /**
    * Set credentials from tokens
    */
-  setCredentials(tokens: any) {
+  setCredentials(tokens: Record<string, unknown>) {
     this.oauth2Client.setCredentials(tokens);
     this.drive = google.drive({ version: 'v3', auth: this.oauth2Client });
   }
@@ -71,6 +82,10 @@ export class GoogleDriveService {
    * Upload a file to Google Drive
    */
   async createOrGetFolder(folderName: string, parentId?: string): Promise<string> {
+    if (!this.drive) {
+      throw new Error('Not authenticated with Google Drive');
+    }
+
     try {
       // Build query to search for existing folder
       let query = `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
@@ -90,7 +105,7 @@ export class GoogleDriveService {
       }
 
       // Create folder if it doesn't exist
-      const folderMetadata: any = {
+      const folderMetadata: drive_v3.Schema$File = {
         name: folderName,
         mimeType: 'application/vnd.google-apps.folder'
       };
@@ -112,6 +127,10 @@ export class GoogleDriveService {
   }
 
   async listFilesInFolder(folderId: string): Promise<Array<{ id: string; name: string; webViewLink: string; webContentLink: string }>> {
+    if (!this.drive) {
+      throw new Error('Not authenticated with Google Drive');
+    }
+
     try {
       const response = await this.drive.files.list({
         q: `'${folderId}' in parents and trashed=false and mimeType != 'application/vnd.google-apps.folder'`,
@@ -120,12 +139,14 @@ export class GoogleDriveService {
         pageSize: 1000
       });
 
-      return (response.data.files || []).map((file: any) => ({
-        id: file.id!,
-        name: file.name!,
-        webViewLink: file.webViewLink!,
-        webContentLink: file.webContentLink || `https://drive.google.com/uc?export=download&id=${file.id}`
-      }));
+      return (response.data.files || [])
+        .filter((file): file is drive_v3.Schema$File => Boolean(file.id && file.name))
+        .map(file => ({
+          id: file.id!,
+          name: file.name!,
+          webViewLink: file.webViewLink!,
+          webContentLink: file.webContentLink || `https://drive.google.com/uc?export=download&id=${file.id}`
+        }));
     } catch (error) {
       console.error('Error listing files:', error);
       throw error;
@@ -133,6 +154,10 @@ export class GoogleDriveService {
   }
 
   async listFoldersInFolder(folderId: string): Promise<Array<{ id: string; name: string }>> {
+    if (!this.drive) {
+      throw new Error('Not authenticated with Google Drive');
+    }
+
     try {
       const response = await this.drive.files.list({
         q: `'${folderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
@@ -141,17 +166,19 @@ export class GoogleDriveService {
         pageSize: 1000
       });
 
-      return (response.data.files || []).map((file: any) => ({
-        id: file.id!,
-        name: file.name!
-      }));
+      return (response.data.files || [])
+        .filter((file): file is drive_v3.Schema$File => Boolean(file.id && file.name))
+        .map(file => ({
+          id: file.id!,
+          name: file.name!
+        }));
     } catch (error) {
       console.error('Error listing folders:', error);
       throw error;
     }
   }
 
-  async listFilesRecursively(folderId: string): Promise<any> {
+  async listFilesRecursively(folderId: string): Promise<DriveStructure> {
     try {
       // Get files in current folder
       const files = await this.listFilesInFolder(folderId);
@@ -196,7 +223,7 @@ export class GoogleDriveService {
     }
 
     try {
-      const fileMetadata: any = {
+      const fileMetadata: drive_v3.Schema$File = {
         name: fileName
       };
 
@@ -206,7 +233,7 @@ export class GoogleDriveService {
 
       const media = {
         mimeType: mimeType,
-        body: require('stream').Readable.from(fileBuffer)
+        body: Readable.from(fileBuffer)
       };
 
       const response = await this.drive.files.create({
@@ -216,6 +243,10 @@ export class GoogleDriveService {
       });
 
       const fileId = response.data.id;
+
+      if (!fileId) {
+        throw new Error('Failed to get file ID from upload response');
+      }
 
       // Make the file accessible to anyone with the link
       await this.drive.permissions.create({
@@ -236,15 +267,15 @@ export class GoogleDriveService {
         success: true,
         fileId: fileId,
         fileName: fileName,
-        webViewLink: file.data.webViewLink,
-        webContentLink: file.data.webContentLink
+        webViewLink: file.data.webViewLink || undefined,
+        webContentLink: file.data.webContentLink || undefined
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading file to Google Drive:', error);
       return {
         success: false,
         fileName: fileName,
-        error: error.message || 'Failed to upload file'
+        error: error instanceof Error ? error.message : 'Failed to upload file'
       };
     }
   }
@@ -258,7 +289,7 @@ export class GoogleDriveService {
     }
 
     try {
-      const fileMetadata: any = {
+      const fileMetadata: drive_v3.Schema$File = {
         name: folderName,
         mimeType: 'application/vnd.google-apps.folder'
       };
@@ -272,7 +303,7 @@ export class GoogleDriveService {
         fields: 'id'
       });
 
-      return response.data.id;
+      return response.data.id || null;
     } catch (error) {
       console.error('Error creating folder:', error);
       return null;
@@ -294,7 +325,14 @@ export class GoogleDriveService {
         orderBy: 'name'
       });
 
-      return response.data.files || [];
+      return (response.data.files || [])
+        .filter((file): file is { id: string; name: string } => 
+          Boolean(file.id && file.name)
+        )
+        .map(file => ({
+          id: file.id,
+          name: file.name
+        }));
     } catch (error) {
       console.error('Error listing folders:', error);
       return [];

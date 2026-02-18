@@ -31,7 +31,7 @@ export async function GET() {
       redirectUri
     });
 
-    driveService.setCredentials(tokens);
+    driveService.setCredentials(tokens as any);
 
     // Get or create the folder
     const folderId = await driveService.createOrGetFolder(FOLDER_NAME);

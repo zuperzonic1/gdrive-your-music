@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       redirectUri
     });
 
-    driveService.setCredentials(tokens);
+    driveService.setCredentials(tokens as any);
 
     // Get or create the dedicated folder
     let targetFolderId = await driveService.createOrGetFolder(FOLDER_NAME);

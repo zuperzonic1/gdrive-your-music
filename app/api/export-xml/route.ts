@@ -1,6 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { getTokens } from '@/lib/auth';
-import { GoogleDriveService } from '@/lib/googleDrive';
+import { GoogleDriveService, DriveStructure } from '@/lib/googleDrive';
 
 const FOLDER_NAME = 'GDrive-Your-Music';
 
@@ -9,18 +9,6 @@ interface File {
   name: string;
   webViewLink: string;
   webContentLink: string;
-}
-
-interface Folder {
-  id: string;
-  name: string;
-  files: File[];
-  subfolders: Folder[];
-}
-
-interface Structure {
-  files: File[];
-  subfolders: Folder[];
 }
 
 export async function GET() {
@@ -39,7 +27,7 @@ export async function GET() {
     }
 
     const driveService = new GoogleDriveService({ clientId, clientSecret, redirectUri });
-    driveService.setCredentials(tokens);
+    driveService.setCredentials(tokens as any);
     const folderId = await driveService.createOrGetFolder(FOLDER_NAME);
     const structure = await driveService.listFilesRecursively(folderId);
     const xml = generatePlaylistXML(structure);
@@ -62,13 +50,13 @@ function escXML(t: string | undefined): string {
   return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
-function generatePlaylistXML(structure: Structure): string {
+function generatePlaylistXML(structure: DriveStructure): string {
   let xml = '<playlists>\n';
   
   // Root files -> "All Songs" playlist
   if (structure.files.length > 0) {
     xml += '<playlist pname="All Songs">\n';
-    structure.files.forEach(file => {
+    structure.files.forEach((file: File) => {
       const name = file.name.replace(/\.[^/.]+$/, '');
       const url = getDirectDownloadUrl(file);
       xml += `<song name="${escXML(name)}" url="${escXML(url)}"/>\n`;
@@ -77,7 +65,7 @@ function generatePlaylistXML(structure: Structure): string {
   }
   
   // Each subfolder becomes a playlist
-  structure.subfolders.forEach(folder => {
+  structure.subfolders.forEach((folder: any) => {
     xml += processFolderXML(folder);
   });
   
@@ -85,11 +73,11 @@ function generatePlaylistXML(structure: Structure): string {
   return xml;
 }
 
-function processFolderXML(folder: Folder): string {
+function processFolderXML(folder: any): string {
   let xml = `<playlist pname="${escXML(folder.name)}">\n`;
   
   // Add files from this folder
-  folder.files.forEach(file => {
+  folder.files.forEach((file: File) => {
     const name = file.name.replace(/\.[^/.]+$/, '');
     const url = getDirectDownloadUrl(file);
     xml += `<song name="${escXML(name)}" url="${escXML(url)}"/>\n`;
@@ -98,7 +86,7 @@ function processFolderXML(folder: Folder): string {
   xml += '</playlist>\n';
   
   // Recursively process subfolders as separate playlists
-  folder.subfolders.forEach(sub => {
+  folder.subfolders.forEach((sub: any) => {
     xml += processFolderXML(sub);
   });
   
@@ -111,8 +99,8 @@ function getDirectDownloadUrl(file: File): string {
   return `https://drive.google.com/uc?id=${file.id}&export=download`;
 }
 
-function countFilesInFolder(folder: Folder): number {
+function countFilesInFolder(folder: any): number {
   let count = folder.files.length;
-  folder.subfolders.forEach(sub => count += countFilesInFolder(sub));
+  folder.subfolders.forEach((sub: any) => count += countFilesInFolder(sub));
   return count;
 }
