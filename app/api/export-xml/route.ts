@@ -99,8 +99,3 @@ function getDirectDownloadUrl(file: File): string {
   return `https://drive.google.com/uc?id=${file.id}&export=download`;
 }
 
-function countFilesInFolder(folder: any): number {
-  let count = folder.files.length;
-  folder.subfolders.forEach((sub: any) => count += countFilesInFolder(sub));
-  return count;
-}

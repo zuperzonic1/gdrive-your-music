@@ -41,9 +41,9 @@ export class GoogleDriveService {
   }
 
   /**
-   * Generate the OAuth authorization URL
+   * Generate the OAuth authorization URL with state parameter for security
    */
-  getAuthUrl(): string {
+  getAuthUrl(state?: string): string {
     const scopes = [
       'https://www.googleapis.com/auth/drive.file'
     ];
@@ -51,8 +51,18 @@ export class GoogleDriveService {
     return this.oauth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: scopes,
-      prompt: 'consent'
+      prompt: 'consent',
+      state: state || this.generateSecureState()
     });
+  }
+
+  /**
+   * Generate a secure random state parameter
+   */
+  private generateSecureState(): string {
+    return Math.random().toString(36).substring(2, 15) + 
+           Math.random().toString(36).substring(2, 15) + 
+           Date.now().toString(36);
   }
 
   /**
@@ -201,7 +211,7 @@ export class GoogleDriveService {
 
       return {
         files,
-        subfolders: foldersWithFiles
+        subfolders: foldersWithFiles as any[]
       };
     } catch (error) {
       console.error('Error listing files recursively:', error);
