@@ -19,57 +19,8 @@ export default function Comparisons() {
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold text-white mb-4">Compare Music Upload Solutions</h1>
-        <p className="text-gray-300 mb-8">How GDrive Your Music stacks up against alternatives</p>
-
-        {/* Pricing Comparison Table */}
-        <section className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Pricing Comparison</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="p-3 text-gray-200 font-semibold">Solution</th>
-                  <th className="p-3 text-gray-200 font-semibold">Price</th>
-                  <th className="p-3 text-gray-200 font-semibold">Storage</th>
-                  <th className="p-3 text-gray-200 font-semibold">Setup Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-700 bg-blue-900/20">
-                  <td className="p-3 text-white font-semibold">GDrive Your Music</td>
-                  <td className="p-3 text-green-400">Free</td>
-                  <td className="p-3 text-gray-300">15GB+ (your Google Drive)</td>
-                  <td className="p-3 text-gray-300">&lt;5 minutes</td>
-                </tr>
-                <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">Dropbox</td>
-                  <td className="p-3 text-gray-300">$11.99/month</td>
-                  <td className="p-3 text-gray-300">2TB</td>
-                  <td className="p-3 text-gray-300">Manual upload</td>
-                </tr>
-                <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">OneDrive</td>
-                  <td className="p-3 text-gray-300">$6.99/month</td>
-                  <td className="p-3 text-gray-300">1TB (with Office 365)</td>
-                  <td className="p-3 text-gray-300">Manual upload</td>
-                </tr>
-                <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">SoundCloud Pro</td>
-                  <td className="p-3 text-gray-300">$8/month</td>
-                  <td className="p-3 text-gray-300">Unlimited uploads</td>
-                  <td className="p-3 text-gray-300">N/A (streaming only)</td>
-                </tr>
-                <tr>
-                  <td className="p-3 text-gray-300">Manual Google Drive</td>
-                  <td className="p-3 text-green-400">Free</td>
-                  <td className="p-3 text-gray-300">15GB</td>
-                  <td className="p-3 text-gray-300">Hours (manual work)</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <h1 className="text-4xl font-bold text-white mb-4">GDrive Your Music vs Manual Google Drive Upload</h1>
+        <p className="text-gray-300 mb-8">Why automate your music uploads with GDrive Your Music</p>
 
         {/* Feature Comparison */}
         <section className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-8">
@@ -80,104 +31,52 @@ export default function Comparisons() {
                 <tr className="border-b border-gray-700">
                   <th className="p-3 text-gray-200 font-semibold">Feature</th>
                   <th className="p-3 text-gray-200 font-semibold text-center">GDrive Your Music</th>
-                  <th className="p-3 text-gray-200 font-semibold text-center">Dropbox</th>
-                  <th className="p-3 text-gray-200 font-semibold text-center">Manual Upload</th>
+                  <th className="p-3 text-gray-200 font-semibold text-center">Manual Google Drive</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-700">
                   <td className="p-3 text-gray-300">Bulk folder upload</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-yellow-400">Partial</td>
+                  <td className="p-3 text-center text-green-400">✓ Automatic</td>
+                  <td className="p-3 text-center text-yellow-400">Manual selection</td>
                 </tr>
                 <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">Direct download links</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-yellow-400">Manual</td>
+                  <td className="p-3 text-gray-300">Preserve folder structure</td>
+                  <td className="p-3 text-center text-green-400">✓ Automatic</td>
+                  <td className="p-3 text-center text-yellow-400">Create manually</td>
+                </tr>
+                <tr className="border-b border-gray-700">
+                  <td className="p-3 text-gray-300">Generate shareable links</td>
+                  <td className="p-3 text-center text-green-400">✓ Automatic</td>
+                  <td className="p-3 text-center text-yellow-400">Per-file manual</td>
                 </tr>
                 <tr className="border-b border-gray-700">
                   <td className="p-3 text-gray-300">Playlist organization</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-red-400">✗</td>
-                  <td className="p-3 text-center text-yellow-400">Manual</td>
+                  <td className="p-3 text-center text-green-400">✓ Automatic</td>
+                  <td className="p-3 text-center text-red-400">Not available</td>
                 </tr>
                 <tr className="border-b border-gray-700">
                   <td className="p-3 text-gray-300">XML export</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-red-400">✗</td>
-                  <td className="p-3 text-center text-red-400">✗</td>
+                  <td className="p-3 text-center text-green-400">✓ One-click</td>
+                  <td className="p-3 text-center text-red-400">Not available</td>
                 </tr>
                 <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">Open source</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-red-400">✗</td>
-                  <td className="p-3 text-center text-gray-400">N/A</td>
+                  <td className="p-3 text-gray-300">Setup time (1000 songs)</td>
+                  <td className="p-3 text-center text-green-400">~5 minutes</td>
+                  <td className="p-3 text-center text-red-400">2-3 hours</td>
                 </tr>
                 <tr className="border-b border-gray-700">
-                  <td className="p-3 text-gray-300">Self-hosted option</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-red-400">✗</td>
-                  <td className="p-3 text-center text-gray-400">N/A</td>
+                  <td className="p-3 text-gray-300">Price</td>
+                  <td className="p-3 text-center text-green-400">Free</td>
+                  <td className="p-3 text-center text-green-400">Free</td>
                 </tr>
                 <tr>
-                  <td className="p-3 text-gray-300">Format support (9+)</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
-                  <td className="p-3 text-center text-green-400">✓</td>
+                  <td className="p-3 text-gray-300">Open source</td>
+                  <td className="p-3 text-center text-green-400">✓ MIT License</td>
+                  <td className="p-3 text-center text-gray-400">N/A</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        </section>
-
-        {/* Specific Use Case Comparisons */}
-        <section className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Use Case: Game Modding (osu!, Clone Hero)</h2>
-          <div className="space-y-4">
-            <div className="bg-gray-900/50 rounded-lg p-4 border-l-4 border-green-500">
-              <h3 className="text-lg font-semibold text-white mb-2">✓ GDrive Your Music</h3>
-              <ul className="list-disc list-inside text-gray-300 space-y-1 ml-4">
-                <li>Direct download URLs work in rhythm games</li>
-                <li>Bulk upload entire beatmap libraries</li>
-                <li>Export playlists as XML for game import</li>
-                <li>Free with no bandwidth limits</li>
-              </ul>
-            </div>
-            <div className="bg-gray-900/50 rounded-lg p-4 border-l-4 border-yellow-500">
-              <h3 className="text-lg font-semibold text-white mb-2">⚠ Dropbox</h3>
-              <ul className="list-disc list-inside text-gray-300 space-y-1 ml-4">
-                <li>Shared links work but require Dropbox accounts for some features</li>
-                <li>$11.99/month cost</li>
-                <li>No native playlist export</li>
-                <li>Bandwidth limits on free tier</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Use Case: Music Sharing with Friends</h2>
-          <div className="space-y-4">
-            <div className="bg-gray-900/50 rounded-lg p-4 border-l-4 border-green-500">
-              <h3 className="text-lg font-semibold text-white mb-2">✓ GDrive Your Music</h3>
-              <ul className="list-disc list-inside text-gray-300 space-y-1 ml-4">
-                <li>One-click copy shareable links</li>
-                <li>Friends can download without Google account</li>
-                <li>No file size limits for storage</li>
-                <li>Organize by playlists automatically</li>
-              </ul>
-            </div>
-            <div className="bg-gray-900/50 rounded-lg p-4 border-l-4 border-yellow-500">
-              <h3 className="text-lg font-semibold text-white mb-2">⚠ WeTransfer</h3>
-              <ul className="list-disc list-inside text-gray-300 space-y-1 ml-4">
-                <li>Links expire after 7 days</li>
-                <li>2GB limit on free tier</li>
-                <li>No organization features</li>
-                <li>$12/month for Pro features</li>
-              </ul>
-            </div>
           </div>
         </section>
 

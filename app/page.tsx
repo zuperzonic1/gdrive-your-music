@@ -42,6 +42,7 @@ function HomeContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [message, setMessage] = useState('');
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -264,8 +265,8 @@ function HomeContent() {
     if (musicStructure.files.length > 0) {
       xml += '<playlist pname="All Songs">\n';
       musicStructure.files.forEach(file => {
-        const name = file.name.replace(/\.[^/.]+$/, '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-        const url = `https://drive.google.com/uc?id=${file.id}&amp;export=download`;
+        const name = file.name.replace(/\.[^/.]+$/, '').replace(/&/g, '&').replace(/"/g, '"');
+        const url = `https://drive.google.com/uc?id=${file.id}&export=download`;
         xml += `<song name="${name}" url="${url}"/>\n`;
       });
       xml += '</playlist>\n';
@@ -283,7 +284,46 @@ function HomeContent() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    setShowExportMenu(false);
     setMessage('✓ Playlist XML exported!');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const exportCSV = () => {
+    if (!musicStructure) return;
+    let csv = 'Playlist,Song Name,Download URL\n';
+    
+    if (musicStructure.files.length > 0) {
+      musicStructure.files.forEach(file => {
+        const name = file.name.replace(/\.[^/.]+$/, '').replace(/"/g, '""');
+        const url = `https://drive.google.com/uc?id=${file.id}&export=download`;
+        csv += `"All Songs","${name}","${url}"\n`;
+      });
+    }
+    
+    const processFolder = (folder: Folder) => {
+      folder.files.forEach(file => {
+        const playlistName = folder.name.replace(/"/g, '""');
+        const songName = file.name.replace(/\.[^/.]+$/, '').replace(/"/g, '""');
+        const url = `https://drive.google.com/uc?id=${file.id}&export=download`;
+        csv += `"${playlistName}","${songName}","${url}"\n`;
+      });
+      folder.subfolders.forEach(subfolder => processFolder(subfolder));
+    };
+    
+    musicStructure.subfolders.forEach(folder => processFolder(folder));
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'playlists.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setShowExportMenu(false);
+    setMessage('✓ Playlist CSV exported!');
     setTimeout(() => setMessage(''), 3000);
   };
 
@@ -558,13 +598,35 @@ function HomeContent() {
                   <h3 className="text-xl font-bold text-white">
                     Your Music Library ({countFiles(musicStructure)} songs)
                   </h3>
-                  <button
-                    onClick={exportXML}
-                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-500 transition-colors font-semibold text-sm flex items-center gap-2"
-                  >
-                    <span>📄</span>
-                    Export XML
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowExportMenu(prev => !prev)}
+                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-500 transition-colors font-semibold text-sm flex items-center gap-2"
+                    >
+                      <span>📄</span>
+                      Export
+                      <svg className="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.356a.75.75 0 011.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+
+                    {showExportMenu && (
+                      <div className="absolute right-0 mt-2 w-44 bg-gray-800 rounded-lg p-2 border border-gray-700 shadow-lg z-50">
+                        <button
+                          onClick={exportXML}
+                          className="w-full text-left px-3 py-2 rounded hover:bg-gray-700 text-white text-sm"
+                        >
+                          Export XML
+                        </button>
+                        <button
+                          onClick={exportCSV}
+                          className="w-full text-left px-3 py-2 rounded hover:bg-gray-700 text-white text-sm"
+                        >
+                          Export CSV
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {isLoading ? (
                   <p className="text-gray-400 text-center py-4">Loading...</p>
