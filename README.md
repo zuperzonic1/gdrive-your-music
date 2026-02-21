@@ -175,6 +175,21 @@ Works best with modern browsers that support:
 - Remember to authorize your production domain in Google Cloud
 - Put all code via gitignore to prevent committing your .env.local with credentials
 
+## SEO & AI Search Optimization
+
+This project implements comprehensive SEO and AI search engine optimization strategies. See [SEO_IMPROVEMENTS.md](SEO_IMPROVEMENTS.md) for detailed documentation on:
+
+- **Crawling Optimizations**: robots.txt, sitemap.xml, LLMs.txt
+- **Content Structure**: Answer-first FAQ format optimized for AI chunking
+- **Metadata**: Enhanced OpenGraph, Twitter Cards, JSON-LD structured data
+- **Performance**: Page speed and Core Web Vitals optimization
+
+### Key Files
+- `/public/robots.txt` - AI crawler permissions
+- `/public/sitemap.xml` - Site structure mapping
+- `/public/llms.txt` - AI-optimized content summary
+- `/app/faq/page.tsx` - Q&A format for better retrieval
+
 ## License
 
 MIT

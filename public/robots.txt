@@ -1,0 +1,41 @@
+# robots.txt for GDrive Your Music
+# Optimized for AI Search Engines and traditional crawlers
+
+User-agent: *
+Allow: /
+Allow: /terms
+Allow: /privacy
+Disallow: /api/
+Disallow: /library/
+
+# AI-specific crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+# Crawl rate optimization
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://gdriveyourmusic.com/sitemap.xml
+Sitemap: https://gdriveyourmusic.com/llms.txt

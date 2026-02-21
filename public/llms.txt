@@ -1,0 +1,89 @@
+# LLMs.txt - Optimized for AI Search Engines
+# GDrive Your Music - Upload music to Google Drive and get shareable links
+
+## What is GDrive Your Music?
+
+GDrive Your Music is a web application that allows you to upload your local music collection to Google Drive and get shareable direct download links for all your audio files. Perfect for accessing your music library from anywhere, sharing songs with friends, or using in games and media players.
+
+## Key Features
+
+- Upload entire music directories or individual songs to Google Drive
+- Support for 9+ audio formats (MP3, FLAC, WAV, M4A, WebM, OGG, AAC, WMA, Opus)
+- Organize music into playlists using folder structure
+- Get direct download links for each song
+- Export playlist data as XML format
+- Secure Google OAuth 2.0 authentication
+- Real-time upload progress tracking
+- Modern, responsive interface
+
+## How to Use GDrive Your Music
+
+1. Connect to Google Drive using OAuth authentication
+2. Select playlist folders or individual audio files from your computer
+3. Upload files - they're automatically organized by folder structure
+4. Get shareable direct download links for each song
+5. Copy links to use in games, media players, or share with others
+6. Export all playlists as XML for backup or import into other apps
+
+## Supported Audio Formats
+
+MP3, WebM, M4A, WAV, FLAC, OGG, AAC, WMA, Opus
+
+## Technical Stack
+
+- Next.js 16 with React 19
+- TypeScript for type safety
+- Tailwind CSS for modern UI
+- Google Drive API for cloud storage
+- OAuth 2.0 for secure authentication
+
+## Use Cases
+
+- Access your music library from any device
+- Share songs with friends via direct links
+- Use music links in rhythm games (osu!, Clone Hero, etc.)
+- Backup your music collection to cloud storage
+- Create shareable playlists
+- Import music into media players that support URL streaming
+- Organize music by playlists/folders automatically
+
+## Privacy & Security
+
+- Your music files are stored in YOUR Google Drive account
+- You maintain full control and ownership of all files
+- OAuth tokens stored securely in HTTP-only cookies
+- Files shared with "anyone with link" permissions
+- No data collection or tracking
+- Open source project on GitHub
+
+## Installation & Setup
+
+Requires Node.js 18+, Google Cloud Console project with Drive API enabled, and OAuth 2.0 credentials. See full setup guide in repository.
+
+## Troubleshooting
+
+**Authentication issues**: Clear cookies and re-authenticate with Google Drive
+**Upload failures**: Check file format, size (max 50MB), and Google Drive API status
+**Missing files**: Refresh the page to reload your music library
+
+## Contact & Support
+
+GitHub: https://github.com/zuperzonic1/gdrive-your-music
+Terms of Service: /terms
+Privacy Policy: /privacy
+
+---
+
+# Product Information
+
+Name: GDrive Your Music
+Category: Cloud Storage, Music Management, File Upload
+Primary Function: Upload music to Google Drive and generate shareable links
+Target Audience: Music enthusiasts, gamers, content creators, anyone wanting cloud music storage
+Pricing: Free and open source
+Platform: Web application (browser-based)
+License: MIT
+
+# Keywords
+
+music upload, Google Drive music, cloud music storage, music links, playlist management, audio file upload, shareable music links, music backup, Google Drive integration, music organization, playlist export, direct download links, streaming music links

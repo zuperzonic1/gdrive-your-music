@@ -661,6 +661,20 @@ function HomeContent() {
           <div className="text-center text-sm text-gray-400">
             <div className="flex justify-center items-center gap-6 mb-4">
               <Link 
+                href="/comparisons" 
+                className="hover:text-blue-400 transition-colors"
+              >
+                Compare
+              </Link>
+              <span>•</span>
+              <Link 
+                href="/faq" 
+                className="hover:text-blue-400 transition-colors"
+              >
+                FAQ
+              </Link>
+              <span>•</span>
+              <Link 
                 href="/terms" 
                 className="hover:text-blue-400 transition-colors"
               >
