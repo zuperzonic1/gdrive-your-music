@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import type { UploadedFile } from './types';
 
 interface UploadPanelProps {
@@ -16,49 +15,6 @@ interface UploadPanelProps {
   uploadedFiles: UploadedFile[];
 }
 
-// Reads all entries from a directory reader (handles the 100-entry batch limit)
-async function readAllEntries(reader: FileSystemDirectoryReader): Promise<FileSystemEntry[]> {
-  const all: FileSystemEntry[] = [];
-  await new Promise<void>((resolve, reject) => {
-    const readBatch = () => {
-      reader.readEntries((batch) => {
-        if (batch.length === 0) { resolve(); return; }
-        all.push(...batch);
-        readBatch();
-      }, reject);
-    };
-    readBatch();
-  });
-  return all;
-}
-
-// Recursively collects File objects from a FileSystemEntry, setting webkitRelativePath
-async function collectFilesFromEntry(entry: FileSystemEntry, folderPath: string): Promise<File[]> {
-  if (entry.isFile) {
-    return new Promise<File[]>((resolve, reject) => {
-      (entry as FileSystemFileEntry).file((f) => {
-        const relativePath = folderPath ? `${folderPath}/${f.name}` : '';
-        if (relativePath) {
-          try {
-            Object.defineProperty(f, 'webkitRelativePath', {
-              writable: true, configurable: true, value: relativePath,
-            });
-          } catch { /* read-only on this browser — skip */ }
-        }
-        resolve([f]);
-      }, reject);
-    });
-  }
-  if (entry.isDirectory) {
-    const childPath = folderPath ? `${folderPath}/${entry.name}` : entry.name;
-    const reader = (entry as FileSystemDirectoryEntry).createReader();
-    const children = await readAllEntries(reader);
-    const nested = await Promise.all(children.map((c) => collectFilesFromEntry(c, childPath)));
-    return nested.flat();
-  }
-  return [];
-}
-
 export default function UploadPanel({
   selectedFiles,
   isUploading,
@@ -71,8 +27,6 @@ export default function UploadPanel({
   onLogout,
   uploadedFiles,
 }: UploadPanelProps) {
-  const [isDragging, setIsDragging] = useState(false);
-
   const filesByFolder = new Map<string, File[]>();
   selectedFiles.forEach((file) => {
     const tf = file as File & { webkitRelativePath?: string };
@@ -81,67 +35,20 @@ export default function UploadPanel({
     filesByFolder.get(key)!.push(file);
   });
 
-  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    // Collect FileSystemEntry objects synchronously — dataTransfer is cleared after the event
-    const entries: FileSystemEntry[] = [];
-    for (const item of Array.from(e.dataTransfer.items)) {
-      if (item.kind === 'file') {
-        const entry = item.webkitGetAsEntry();
-        if (entry) entries.push(entry);
-      }
-    }
-
-    // Traverse entries asynchronously (handles folders recursively)
-    const allFiles = (await Promise.all(entries.map((entry) => collectFilesFromEntry(entry, '')))).flat();
-    const audioFiles = allFiles.filter((f) =>
-      /\.(mp3|webm|m4a|wav|flac|ogg|aac|wma|opus)$/i.test(f.name)
-    );
-    if (audioFiles.length === 0) return;
-
-    // Pass isPlaylist=true if any file came from inside a folder
-    const hasFolder = audioFiles.some(
-      (f) => !!(f as File & { webkitRelativePath?: string }).webkitRelativePath
-    );
-    onFileSelect(
-      { target: { files: audioFiles, value: '' } } as unknown as React.ChangeEvent<HTMLInputElement>,
-      hasFolder
-    );
-  };
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!isDragging) setIsDragging(true);
-  };
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    // Only exit drag state if the cursor actually leaves the panel (not just moves to a child element)
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
-      setIsDragging(false);
-    }
-  };
-
   return (
-    <div
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      className={`bg-white/[0.04] backdrop-blur-xl border rounded-2xl p-6 space-y-5 transition-all ${isDragging ? 'border-violet-500 bg-violet-500/10' : 'border-white/10'}`}
-    >
+    <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-white">Upload Music</h2>
-          {!isDragging && <p className="text-xs text-slate-500 mt-0.5">Drag files anywhere on this panel to add them</p>}
-          {isDragging && <p className="text-xs text-violet-400 mt-0.5 font-medium">Drop audio files to add them ✦</p>}
+          <p className="text-xs text-slate-500 mt-0.5">Select files or a folder to upload</p>
         </div>
         <button onClick={onLogout} className="text-xs text-gray-500 hover:text-red-400 transition-colors">
           Disconnect
         </button>
       </div>
 
-      {/* Drop zones */}
+      {/* Pick zones */}
       <div className="grid grid-cols-2 gap-4">
         <label
           htmlFor="playlistFolder"
@@ -193,7 +100,7 @@ export default function UploadPanel({
                 <span>{Math.round(((currentFileIndex + 1) / selectedFiles.length) * 100)}%</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                   className="bg-gradient-to-r from-violet-600 to-cyan-500 h-2 rounded-full transition-all duration-300 ease-out"
                   style={{ width: `${((currentFileIndex + 1) / selectedFiles.length) * 100}%` }}
                 />
