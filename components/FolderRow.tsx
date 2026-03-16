@@ -21,7 +21,7 @@ export default function FolderRow({ folder, depth, expanded, onToggle, onCopy }:
     <div className={depth > 0 ? 'ml-4' : ''}>
       <button
         onClick={() => onToggle(folder.id)}
-        className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 transition-colors rounded-lg mb-2 border border-white/5"
+        className="w-full flex items-center justify-between p-3 bg-white/[0.06] hover:bg-white/[0.12] transition-colors rounded-xl mb-2 border border-white/10"
       >
         <div className="flex items-center gap-2">
           <span>{isExpanded ? '📂' : '📁'}</span>
@@ -36,7 +36,7 @@ export default function FolderRow({ folder, depth, expanded, onToggle, onCopy }:
           {folder.files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center justify-between px-3 py-2 bg-white/[0.03] rounded-lg border border-white/5"
+              className="flex items-center justify-between px-3 py-2 bg-white/[0.03] rounded-xl border border-white/5"
             >
               <p className="text-sm text-gray-300 truncate flex-1">{file.name}</p>
               <div className="flex gap-2 ml-4 flex-shrink-0">
@@ -44,13 +44,13 @@ export default function FolderRow({ folder, depth, expanded, onToggle, onCopy }:
                   href={file.webContentLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs bg-white/10 hover:bg-white/20 text-gray-200 px-2.5 py-1 rounded transition-colors"
+                  className="text-xs bg-white/10 hover:bg-white/20 text-gray-200 px-2.5 py-1 rounded-lg transition-colors"
                 >
                   Download
                 </a>
                 <button
                   onClick={() => onCopy(file.webContentLink)}
-                  className="text-xs bg-blue-600/80 hover:bg-blue-600 text-white px-2.5 py-1 rounded transition-colors"
+                  className="text-xs bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white px-2.5 py-1 rounded-lg transition-all"
                 >
                   Copy Link
                 </button>

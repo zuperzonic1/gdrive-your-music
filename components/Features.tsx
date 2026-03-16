@@ -52,11 +52,11 @@ export default function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-white/5 border border-white/10 rounded-xl p-5 hover:bg-white/[0.07] transition-colors"
+              className="bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-violet-500/30 transition-all group"
             >
-              <div className="text-3xl mb-3">{f.icon}</div>
-              <h3 className="font-semibold text-white mb-1 text-sm">{f.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{f.description}</p>
+              <div className="text-3xl mb-4">{f.icon}</div>
+              <h3 className="font-semibold text-white mb-2 text-[15px]">{f.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{f.description}</p>
             </div>
           ))}
         </div>

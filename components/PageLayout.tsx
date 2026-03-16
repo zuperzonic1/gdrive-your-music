@@ -15,7 +15,7 @@ export default function PageLayout({
   maxWidth = 'max-w-4xl',
 }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen text-white">
       <div className={`${maxWidth} mx-auto px-6 py-12`}>
         <div className="mb-8">
           <Link

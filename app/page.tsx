@@ -154,14 +154,22 @@ function HomeContent() {
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link);
     setMessage('✓ Link copied to clipboard!');
-    setTimeout(() => setMessage(''), 3000);
+    setTimeout(() => setMessage(''), 2500);
   };
 
+  // Auto-dismiss messages after delay
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen text-white">
       {/* Status message */}
       {message && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900 border border-white/10 text-gray-200 text-sm px-5 py-2.5 rounded-full shadow-xl">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900/90 backdrop-blur-xl border border-violet-500/30 text-gray-100 text-sm px-6 py-3 rounded-full shadow-xl shadow-violet-900/30">
           {message}
         </div>
       )}
@@ -173,9 +181,9 @@ function HomeContent() {
         </>
       ) : (
         <main className="max-w-5xl mx-auto px-6 py-16 space-y-6">
-          <div className="mb-2">
-            <h1 className="text-3xl font-bold text-white">GDrive Your Music</h1>
-            <p className="text-gray-500 text-sm mt-1">Upload music to Google Drive & manage your library</p>
+          <div className="mb-4">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">GDrive Your Music</h1>
+            <p className="text-slate-500 text-sm mt-1.5">Upload music to Google Drive & manage your library</p>
           </div>
 
           <UploadPanel
@@ -191,9 +199,9 @@ function HomeContent() {
             uploadedFiles={uploadedFiles}
           />
 
-          {musicStructure && (
+          {(musicStructure || isLoading) && (
             <MusicLibrary
-              structure={musicStructure}
+              structure={musicStructure ?? { files: [], subfolders: [] }}
               isLoading={isLoading}
               onCopy={copyLink}
             />
@@ -208,13 +216,13 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-          <div className="text-gray-500 text-sm">Loading…</div>
-        </div>
-      }
-    >
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-slate-500 text-sm">Loading…</div>
+          </div>
+        }
+      >
       <HomeContent />
     </Suspense>
   );

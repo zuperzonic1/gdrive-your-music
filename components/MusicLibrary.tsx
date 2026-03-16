@@ -87,7 +87,7 @@ export default function MusicLibrary({ structure, isLoading, onCopy }: Props) {
   };
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+    <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-lg font-bold text-white">
           Music Library <span className="text-gray-500 font-normal text-sm">({total} songs)</span>
@@ -95,7 +95,7 @@ export default function MusicLibrary({ structure, isLoading, onCopy }: Props) {
         <div className="relative">
           <button
             onClick={() => setShowExport((p) => !p)}
-            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors border border-white/10"
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors border border-white/10"
           >
             Export
             <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -103,23 +103,44 @@ export default function MusicLibrary({ structure, isLoading, onCopy }: Props) {
             </svg>
           </button>
           {showExport && (
-            <div className="absolute right-0 mt-1.5 w-36 bg-gray-900 border border-white/10 rounded-lg p-1 shadow-xl z-50">
-              <button onClick={exportXML} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-white/10 rounded">Export XML</button>
-              <button onClick={exportCSV} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-white/10 rounded">Export CSV</button>
+            <div className="absolute right-0 mt-1.5 w-36 bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-1 shadow-xl z-50">
+              <button onClick={exportXML} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-white/10 rounded-lg">Export XML</button>
+              <button onClick={exportCSV} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-white/10 rounded-lg">Export CSV</button>
             </div>
           )}
         </div>
       </div>
 
       {isLoading ? (
-        <p className="text-gray-500 text-sm text-center py-6">Loading library…</p>
+        <div className="space-y-2 animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-white/5">
+              <div className="w-5 h-5 bg-white/10 rounded-md flex-shrink-0" />
+              <div className="flex-1 space-y-1.5">
+                <div className="h-3 bg-white/10 rounded-full w-2/5" />
+                <div className="h-2.5 bg-white/5 rounded-full w-1/5" />
+              </div>
+            </div>
+          ))}
+          <div className="ml-4 space-y-1.5 mt-1">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex items-center justify-between px-3 py-2 rounded-xl border border-white/5">
+                <div className="h-2.5 bg-white/[0.07] rounded-full flex-1 mr-4" style={{ width: `${50 + i * 10}%` }} />
+                <div className="flex gap-2">
+                  <div className="h-6 w-16 bg-white/10 rounded-lg" />
+                  <div className="h-6 w-16 bg-white/10 rounded-lg" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
         <div className="space-y-2 max-h-[600px] overflow-y-auto">
           {structure.files.length > 0 && (
             <div>
               <button
                 onClick={() => toggle('__root__')}
-                className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 transition-colors rounded-lg mb-2 border border-white/5"
+                className="w-full flex items-center justify-between p-3 bg-white/[0.06] hover:bg-white/[0.12] transition-colors rounded-xl mb-2 border border-white/10"
               >
                 <div className="flex items-center gap-2">
                   <span>{expanded.has('__root__') ? '📂' : '📁'}</span>
@@ -131,11 +152,11 @@ export default function MusicLibrary({ structure, isLoading, onCopy }: Props) {
               {expanded.has('__root__') && (
                 <div className="ml-4 space-y-1.5 mb-2">
                   {structure.files.map((file) => (
-                    <div key={file.id} className="flex items-center justify-between px-3 py-2 bg-white/[0.03] rounded-lg border border-white/5">
+                    <div key={file.id} className="flex items-center justify-between px-3 py-2 bg-white/[0.03] rounded-xl border border-white/5">
                       <p className="text-sm text-gray-300 truncate flex-1">{file.name}</p>
                       <div className="flex gap-2 ml-4 flex-shrink-0">
-                        <a href={file.webContentLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-white/10 hover:bg-white/20 text-gray-200 px-2.5 py-1 rounded transition-colors">Download</a>
-                        <button onClick={() => onCopy(file.webContentLink)} className="text-xs bg-blue-600/80 hover:bg-blue-600 text-white px-2.5 py-1 rounded transition-colors">Copy Link</button>
+                        <a href={file.webContentLink} target="_blank" rel="noopener noreferrer" className="text-xs bg-white/10 hover:bg-white/20 text-gray-200 px-2.5 py-1 rounded-lg transition-colors">Download</a>
+                        <button onClick={() => onCopy(file.webContentLink)} className="text-xs bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white px-2.5 py-1 rounded-lg transition-all">Copy Link</button>
                       </div>
                     </div>
                   ))}

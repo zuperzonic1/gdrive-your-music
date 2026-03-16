@@ -1,6 +1,6 @@
-# GDrive-Your-Music
+# GDrive Your Music
 
-A Next.js web application that allows you to upload your local music directory to Google Drive and get shareable links for all your music files.
+A Next.js 16 web application that lets you upload your local music directory to Google Drive and get shareable links for all your music files.
 
 ## Features
 
@@ -8,8 +8,9 @@ A Next.js web application that allows you to upload your local music directory t
 - ☁️ Upload all audio files to Google Drive
 - 🔗 Get shareable Google Drive links for each file
 - 📊 Real-time upload progress tracking
-- 🎨 Modern, responsive UI with Tailwind CSS
+- 🎨 Modern, responsive UI with Tailwind CSS v4
 - 🔐 Secure Google OAuth 2.0 authentication
+- 📋 Export XML playlists compatible with music players
 
 ## Supported Audio Formats
 
@@ -48,22 +49,23 @@ A Next.js web application that allows you to upload your local music directory t
 
 ### 2. Project Setup
 
-1. Clone or navigate to the project directory:
+1. Clone the repository:
 ```bash
+git clone https://github.com/zuperzonic1/gdrive-your-music.git
 cd gdrive-your-music
 ```
 
 2. Install dependencies:
 ```bash
-npm
-
- install
+npm install
 ```
 
-3. Create environment file:
+3. Create your environment file:
 ```bash
 cp .env.local.example .env.local
 ```
+
+> If `.env.local.example` is not present, create `.env.local` manually (see step 4).
 
 4. Edit `.env.local` and add your credentials:
 ```env
@@ -73,7 +75,7 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_random_secret_min_32_chars
 ```
 
-To generate a secure NEXTAUTH_SECRET:
+To generate a secure `NEXTAUTH_SECRET`:
 ```bash
 openssl rand -base64 32
 ```
@@ -113,7 +115,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 4. **Get Your Links**
    - Once complete, you'll see a list of all uploaded files
    - Each file has a shareable Google Drive link
-   - Copy individual links or export all links as CSV/TXT
+   - Copy individual links or export all links as XML playlist
 
 ## Project Structure
 
@@ -121,32 +123,44 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 gdrive-your-music/
 ├── app/
 │   ├── api/
-│   │   ├── auth/          # OAuth routes
-│   │   └── upload/        # File upload route
-│   ├── library/           # View uploaded files
+│   │   ├── auth/              # OAuth routes (login, callback, check, logout)
+│   │   ├── upload/            # File upload route
+│   │   ├── folder/            # Folder listing route
+│   │   └── export-xml/        # XML playlist export route
+│   ├── comparisons/           # Comparisons page
+│   ├── faq/                   # FAQ page
+│   ├── terms/                 # Terms of Service page
+│   ├── privacy/               # Privacy Policy page
 │   ├── layout.tsx
-│   └── page.tsx           # Main upload page
-├── components/            # React components
+│   └── page.tsx               # Main upload page
+├── components/                # Shared React components
 ├── lib/
-│   ├── googleDrive.ts     # Google Drive service
-│   └── auth.ts            # Authentication helpers
-├── .env.local.example     # Environment variables template
+│   ├── googleDrive.ts         # Google Drive service layer
+│   └── auth.ts                # Authentication helpers
+├── public/                    # Static assets & SEO files
+├── .env.local                 # Environment variables (never commit this)
 └── package.json
 ```
 
 ## API Routes
 
-- `GET /api/auth` - Generate OAuth URL
-- `GET /api/auth/callback` - Handle OAuth callback
-- `POST /api/auth/logout` - Clear authentication
-- `POST /api/upload` - Upload file to Google Drive
+| Method | Route | Description |
+|--------|-------|-------------|
+| `GET` | `/api/auth` | Generate OAuth URL |
+| `GET` | `/api/auth/callback` | Handle OAuth callback |
+| `GET` | `/api/auth/check` | Check authentication status |
+| `POST` | `/api/auth/logout` | Clear authentication |
+| `POST` | `/api/upload` | Upload file to Google Drive |
+| `GET` | `/api/folder` | List Drive folder contents |
+| `GET` | `/api/export-xml` | Export XML playlist |
 
 ## Security Notes
 
-- Tokens are stored in secure HTTP-only cookies
+- Tokens are stored in secure HTTP-only cookies — never in `localStorage`
 - Files are uploaded with "anyone with link can view" permissions
-- Maximum upload size: 50MB per file
-- Only audio files are accepted
+- Maximum upload size: 50 MB per file
+- Only audio files are accepted (validated server-side)
+- Never commit `.env.local` — it is listed in `.gitignore`
 
 ## Browser Compatibility
 
@@ -162,38 +176,33 @@ Works best with modern browsers that support:
 
 **Upload fails:**
 - Ensure file is a valid audio format
-- Check file size (max 50MB)
+- Check file size (max 50 MB)
 - Verify Google Drive API is enabled
 
 **OAuth redirect error:**
 - Confirm redirect URI matches in Google Cloud Console
 - Must be exactly: `http://localhost:3000/api/auth/callback`
 
-## Additional Production Notes
+## Deploying to Production
 
-- Update the redirectUri in .env to your production domain if deploying
-- Remember to authorize your production domain in Google Cloud
-- Put all code via gitignore to prevent committing your .env.local with credentials
+- Update `NEXTAUTH_URL` in `.env.local` to your production domain
+- Add your production domain as an authorized redirect URI in Google Cloud Console
+- Regenerate `NEXTAUTH_SECRET` for production (use a strong random value)
 
 ## SEO & AI Search Optimization
 
-This project implements comprehensive SEO and AI search engine optimization strategies. See [SEO_IMPROVEMENTS.md](SEO_IMPROVEMENTS.md) for detailed documentation on:
+This project includes comprehensive SEO and AI search optimization:
 
-- **Crawling Optimizations**: robots.txt, sitemap.xml, LLMs.txt
-- **Content Structure**: Answer-first FAQ format optimized for AI chunking
-- **Metadata**: Enhanced OpenGraph, Twitter Cards, JSON-LD structured data
-- **Performance**: Page speed and Core Web Vitals optimization
-
-### Key Files
-- `/public/robots.txt` - AI crawler permissions
-- `/public/sitemap.xml` - Site structure mapping
-- `/public/llms.txt` - AI-optimized content summary
-- `/app/faq/page.tsx` - Q&A format for better retrieval
+- **`/public/robots.txt`** — Crawler permissions
+- **`/public/sitemap.xml`** — Site structure mapping
+- **`/public/llms.txt`** — AI-optimized content summary
+- **`/app/faq/page.tsx`** — Q&A format for better AI retrieval
+- **`/app/comparisons/page.tsx`** — Competitive comparison content
 
 ## License
 
-MIT
+[MIT](./LICENSE) © 2026 [zuperzonic1](https://github.com/zuperzonic1)
 
 ## Support
 
-For issues or questions, please check the documentation or create an issue in the repository.
+For issues or questions, please [open an issue](https://github.com/zuperzonic1/gdrive-your-music/issues) on GitHub.
