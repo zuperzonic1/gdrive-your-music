@@ -73,7 +73,7 @@ GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_client_secret_here
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_random_secret_min_32_chars
-```
+``` 
 
 To generate a secure `NEXTAUTH_SECRET`:
 ```bash
