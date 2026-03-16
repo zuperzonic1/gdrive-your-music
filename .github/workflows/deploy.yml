@@ -1,9 +1,9 @@
 name: Deploy
 
-# Trigger on every push to main
+# Trigger on every push to master
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 # Prevent overlapping deploys
 concurrency:
@@ -13,14 +13,14 @@ concurrency:
 jobs:
   deploy:
     name: Pull → Build → Restart
-    runs-on: self-hosted        # executes on your Ubuntu machine 
+    runs-on: self-hosted        # executes on your Ubuntu machine
     defaults:
       run:
         working-directory: /home/mfelobes/Projects/gdrive-your-music
 
     steps:
       - name: Pull latest code
-        run: git pull origin main
+        run: git pull origin master
 
       - name: Install dependencies
         run: npm ci
