@@ -13,7 +13,7 @@ concurrency:
 jobs:
   deploy:
     name: Pull → Build → Restart
-    runs-on: self-hosted        # executes on your Ubuntu machine
+    runs-on: self-hosted        # executes on your Ubuntu machine 
     defaults:
       run:
         working-directory: /home/mfelobes/Projects/gdrive-your-music
