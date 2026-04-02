@@ -2,6 +2,9 @@
 
 A Next.js 16 web application that lets you upload your local music directory to Google Drive and get shareable links for all your music files.
 
+
+**🌐 Live Demo: [https://music.projectsmith.dev/](https://music.projectsmith.dev/)**
+
 ## Features
 
 - 🎵 Select entire music directory from your computer
