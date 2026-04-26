@@ -5,7 +5,7 @@ A Next.js 16 web application that lets you upload your local music directory to 
 
 **🌐 Live Demo: [https://music.projectsmith.dev/](https://music.projectsmith.dev/)**
 
-## Features
+## Features 
 
 - 🎵 Select entire music directory from your computer
 - ☁️ Upload all audio files to Google Drive
@@ -209,3 +209,6 @@ This project includes comprehensive SEO and AI search optimization:
 ## Support
 
 For issues or questions, please [open an issue](https://github.com/zuperzonic1/gdrive-your-music/issues) on GitHub.
+
+
+test
